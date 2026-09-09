@@ -25,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "GastosComtrole")
+@Table(name = "GastosControle")
 public class ModeloDeGasto {
 
     @Id
