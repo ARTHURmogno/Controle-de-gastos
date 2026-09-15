@@ -32,4 +32,21 @@ public class ModeloDeGastosService {
         (() -> new IllegalArgumentException("nada encontrado."));
     }
 
+    public ModeloDeGasto atualizarPorId(ModeloDeGasto gasto, Long id) {
+        ModeloDeGasto novoGasto = buscarPorId(id);
+
+        novoGasto.setDescricao(gasto.getDescricao());
+        novoGasto.setValor(gasto.getValor());
+        novoGasto.setData(gasto.getData());
+        novoGasto.setCategoria(gasto.getCategoria());
+
+        modeloDeGastosRepository.save(novoGasto);
+
+       return novoGasto;
+    }
+
+    public void deletarPorId(Long id) {
+        modeloDeGastosRepository.deleteById(id);
+    }
+
 }
