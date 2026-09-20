@@ -1,8 +1,6 @@
 package com.UMBRELLA.ControleDeGastos.model;
 
-public class Categoria {
-
-    public enum categoria {
+    public enum Categoria {
 
     ALIMENTACAO,
     TRANSPORTE,
@@ -14,6 +12,4 @@ public class Categoria {
     ENERGIA,
     COMBUSTIVEL_CARRO,
     COMBUSTIVEL_MOTO
-}
-
 }

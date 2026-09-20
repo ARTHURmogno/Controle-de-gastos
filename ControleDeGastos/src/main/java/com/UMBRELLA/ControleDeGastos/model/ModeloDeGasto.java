@@ -36,7 +36,7 @@ public class ModeloDeGasto {
     @Size(min = 2, max = 500)
     private String descricao;
 
-    @Positive
+    @Positive(message = "Valor deve-se positivo")
     @NotNull(message = "O valor é obrigatório")
     private BigDecimal valor;
 

@@ -12,6 +12,5 @@ public interface ModeloDeGastosRepository extends JpaRepository<ModeloDeGasto, L
 
     boolean existsById(Long id);
 
-    List<ModeloDeGasto> findAllOrDenByNome(Pageable pageable);
 
 }
