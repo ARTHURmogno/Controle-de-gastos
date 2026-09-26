@@ -49,6 +49,8 @@ public class ModeloDeGastosService {
     }
 
     public void deletarPorId(Long id) {
+        ModeloDeGasto gasto = buscarPorId(id);
+        
         modeloDeGastosRepository.deleteById(id);
     }
 

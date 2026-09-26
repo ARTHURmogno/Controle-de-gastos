@@ -2,7 +2,9 @@ package com.UMBRELLA.ControleDeGastos.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,5 +41,17 @@ public class ModeloDeGastosController {
 
         return modeloDeGastosService.salvarDados(gasto);
     }
+
+    @PatchMapping("/{id}")
+    public ModeloDeGasto atualizarGastoPorId(@RequestBody ModeloDeGasto gasto, @PathVariable Long id) {
+
+        return modeloDeGastosService.atualizarPorId(gasto, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarGastoPorId(@PathVariable Long id) {
+        modeloDeGastosService.deletarPorId(id);
+    }
+
+    }
     
-}
