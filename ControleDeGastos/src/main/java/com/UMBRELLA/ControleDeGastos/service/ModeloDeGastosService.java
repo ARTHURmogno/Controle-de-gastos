@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
+import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
+import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
 
@@ -18,13 +21,13 @@ public class ModeloDeGastosService {
         this.modeloDeGastosRepository = modeloDeGastosRepository;
     }
 
-    public ModeloDeGasto salvarDados(ModeloDeGasto gasto) {
+    public GastoResponseDTO salvarDados(GastoRequestDTO gastoDTO) {
 
-        return modeloDeGastosRepository.save(gasto);
+        return modeloDeGastosRepository.save(gastoDTO);
 
     }
 
-    public List<ModeloDeGasto> mostrarDados() {
+    public List<GastoRequestDTO> mostrarDados() {
         List<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll();
 
         return gastos;
@@ -35,7 +38,7 @@ public class ModeloDeGastosService {
         (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "nada encontrado."));
     }
 
-    public ModeloDeGasto atualizarPorId(ModeloDeGasto gasto, Long id) {
+    public GastoRequestDTO atualizarPorId(GastoUpdateDTO gasto, Long id) {
         ModeloDeGasto novoGasto = buscarPorId(id);
 
         novoGasto.setDescricao(gasto.getDescricao());
@@ -48,9 +51,9 @@ public class ModeloDeGastosService {
        return novoGasto;
     }
 
-    public void deletarPorId(Long id) {
+    public GastoResponseDTO deletarPorId(Long id) {
         ModeloDeGasto gasto = buscarPorId(id);
-        
+
         modeloDeGastosRepository.deleteById(id);
     }
 

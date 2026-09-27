@@ -2,6 +2,7 @@ package com.UMBRELLA.ControleDeGastos.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,7 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
+import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
+import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
 import com.UMBRELLA.ControleDeGastos.service.ModeloDeGastosService;
+
+
+import jakarta.validation.Valid;
 
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 
@@ -26,8 +33,9 @@ public class ModeloDeGastosController {
     }
 
     @GetMapping
-    public List<ModeloDeGasto> mostrarDados() {
-        return modeloDeGastosService.mostrarDados();
+    public ResponseEntity<List<GastoResponseDTO>> mostrarDados() {
+
+        return ResponseEntity.ok(modeloDeGastosService.mostrarDados());
     }
 
     @GetMapping("/{id}")
@@ -37,19 +45,19 @@ public class ModeloDeGastosController {
     }
 
     @PostMapping 
-    public ModeloDeGasto salvarGasto(@RequestBody ModeloDeGasto gasto) {
+    public ResponseEntity<GastoResponseDTO> salvarGasto(@RequestBody @Valid GastoRequestDTO gastoDTO) {
 
-        return modeloDeGastosService.salvarDados(gasto);
+        return ResponseEntity.ok(modeloDeGastosService.salvarDados(gastoDTO));
     }
 
     @PatchMapping("/{id}")
-    public ModeloDeGasto atualizarGastoPorId(@RequestBody ModeloDeGasto gasto, @PathVariable Long id) {
+    public ResponseEntity<GastoResponseDTO> atualizarGastoPorId(@RequestBody GastoUpdateDTO gasto, @PathVariable Long id) {
 
-        return modeloDeGastosService.atualizarPorId(gasto, id);
+        return ResponseEntity.ok(modeloDeGastosService.atualizarPorId(gasto, id));
     }
 
     @DeleteMapping("/{id}")
-    public void deletarGastoPorId(@PathVariable Long id) {
+    public GastoResponseDTO deletarGastoPorId(@PathVariable Long id) {
         modeloDeGastosService.deletarPorId(id);
     }
 
