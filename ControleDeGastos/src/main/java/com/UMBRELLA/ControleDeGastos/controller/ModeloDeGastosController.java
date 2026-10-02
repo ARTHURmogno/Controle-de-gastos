@@ -20,8 +20,6 @@ import com.UMBRELLA.ControleDeGastos.service.ModeloDeGastosService;
 
 import jakarta.validation.Valid;
 
-import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
-
 @RestController
 @RequestMapping("/gastos")
 public class ModeloDeGastosController {
@@ -39,9 +37,9 @@ public class ModeloDeGastosController {
     }
 
     @GetMapping("/{id}")
-    public ModeloDeGasto gastosPorId(@PathVariable Long id) {
+    public ResponseEntity<GastoResponseDTO> gastosPorId(@PathVariable Long id) {
 
-        return modeloDeGastosService.buscarPorId(id);
+        return ResponseEntity.ok(modeloDeGastosService.buscarDadosPorId(id));
     }
 
     @PostMapping 
@@ -57,8 +55,9 @@ public class ModeloDeGastosController {
     }
 
     @DeleteMapping("/{id}")
-    public GastoResponseDTO deletarGastoPorId(@PathVariable Long id) {
-        modeloDeGastosService.deletarPorId(id);
+    public ResponseEntity<Long> deletarGastoPorId(@PathVariable Long id) {
+
+        return ResponseEntity.ok(modeloDeGastosService.deletarPorId(id));
     }
 
     }

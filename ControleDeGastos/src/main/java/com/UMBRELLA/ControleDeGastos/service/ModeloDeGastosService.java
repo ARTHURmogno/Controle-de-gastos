@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
+import com.UMBRELLA.ControleDeGastos.mapper.GastoMapper;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
 
@@ -16,45 +17,54 @@ import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
 public class ModeloDeGastosService {
 
     private final ModeloDeGastosRepository modeloDeGastosRepository;
+    private final GastoMapper gastoMapper;
 
-    public ModeloDeGastosService(ModeloDeGastosRepository modeloDeGastosRepository) {
+    public ModeloDeGastosService(ModeloDeGastosRepository modeloDeGastosRepository, GastoMapper gastoMapper) {
         this.modeloDeGastosRepository = modeloDeGastosRepository;
+        this.gastoMapper = gastoMapper;
     }
 
     public GastoResponseDTO salvarDados(GastoRequestDTO gastoDTO) {
+        ModeloDeGasto gasto = gastoMapper.toEntity(gastoDTO);
 
-        return modeloDeGastosRepository.save(gastoDTO);
+        ModeloDeGasto novoGasto = modeloDeGastosRepository.save(gasto);
 
+        return gastoMapper.toResponseDTO(novoGasto);
     }
 
-    public List<GastoRequestDTO> mostrarDados() {
+    public List<GastoResponseDTO> mostrarDados() {
         List<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll();
 
-        return gastos;
+        return gastos.stream().map(gastoMapper::toResponseDTO).toList();
     }
 
-    public ModeloDeGasto buscarPorId(Long id) {
+    private ModeloDeGasto buscarPorId(Long id) {
         return modeloDeGastosRepository.findById(id).orElseThrow
         (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "nada encontrado."));
     }
 
-    public GastoRequestDTO atualizarPorId(GastoUpdateDTO gasto, Long id) {
-        ModeloDeGasto novoGasto = buscarPorId(id);
+    public GastoResponseDTO buscarDadosPorId(Long id) {
+        ModeloDeGasto novoDado = buscarPorId(id);
 
-        novoGasto.setDescricao(gasto.getDescricao());
-        novoGasto.setValor(gasto.getValor());
-        novoGasto.setData(gasto.getData());
-        novoGasto.setCategoria(gasto.getCategoria());
-
-        modeloDeGastosRepository.save(novoGasto);
-
-       return novoGasto;
+        return gastoMapper.toResponseDTO(novoDado);
     }
 
-    public GastoResponseDTO deletarPorId(Long id) {
-        ModeloDeGasto gasto = buscarPorId(id);
+    public GastoResponseDTO atualizarPorId(GastoUpdateDTO dto, Long id) {
+        ModeloDeGasto novoGasto = buscarPorId(id);
+
+        gastoMapper.atualizarEntidade(dto, novoGasto);
+
+        ModeloDeGasto atualizado = modeloDeGastosRepository.save(novoGasto);
+
+        return gastoMapper.toResponseDTO(atualizado);
+    }
+
+    public Long deletarPorId(Long id) {
+        buscarPorId(id);
 
         modeloDeGastosRepository.deleteById(id);
+
+        return id;
     }
 
 }
