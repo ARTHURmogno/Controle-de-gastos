@@ -9,6 +9,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class GastoRequestDTO {
     private BigDecimal valor;
 
     @NotNull(message = "A data é obrigatório")
+    @PastOrPresent(message = "Data é abrigatória")
     private LocalDate data;
 
     @Enumerated(EnumType.STRING)

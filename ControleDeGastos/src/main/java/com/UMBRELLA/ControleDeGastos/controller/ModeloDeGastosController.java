@@ -49,7 +49,7 @@ public class ModeloDeGastosController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<GastoResponseDTO> atualizarGastoPorId(@RequestBody GastoUpdateDTO gasto, @PathVariable Long id) {
+    public ResponseEntity<GastoResponseDTO> atualizarGastoPorId(@RequestBody @Valid GastoUpdateDTO gasto, @PathVariable Long id) {
 
         return ResponseEntity.ok(modeloDeGastosService.atualizarPorId(gasto, id));
     }
