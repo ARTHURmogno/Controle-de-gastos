@@ -24,7 +24,7 @@ import lombok.Setter;
 public class GastoRequestDTO {
 
     @NotBlank(message = "Descrição é obrigatório")
-    @Size(min = 2, max = 500)
+    @Size(message = "Tamanho mínimo do texto 2 carecteres é tamanho máximo 500 caracteres." ,min = 2, max = 500)
     private String descricao;
 
     @Positive(message = "Valor deve-se positivo")

@@ -7,7 +7,6 @@ package com.UMBRELLA.ControleDeGastos.model;
     MORADIA,
     LAZER,
     SAUDE,
-    LUZ,
     AGUA,
     ENERGIA,
     COMBUSTIVEL_CARRO,
