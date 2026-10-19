@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice 
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResponseStatusException.class)
+    /*@ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> tratarErroDeStatus(
             HttpServletRequest request,
             ResponseStatusException ex) {
@@ -36,7 +36,15 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(status).body(corpo);
-    }
+    }*/
+
+
+         @ExceptionHandler(ResponseStatusException.class)
+         public ResponseEntity<ErroResponse> tratarErroDeStatus(ResponseStatusException ex) {
+
+                ErroResponse erroResponse = new ErroResponse(404, ex.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroResponse);
+            }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> tratarMultiplosErros(MethodArgumentNotValidException ex) {
