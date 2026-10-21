@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,22 +51,33 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErroResponse> tratarMultiplosErros(MethodArgumentNotValidException ex) {
         List<FieldError> erros = ex.getBindingResult().getFieldErrors();
 
-        Map<String, List<String>> errosPorCampo = new HashMap();
+        Map<String, List<String>> errosPorCampo = new HashMap<>();
 
         for (FieldError erro : erros) {
 
             String compo = erro.getField();
             String mensagem = erro.getDefaultMessage();
 
-            List<String> mensagems = errosPorCampo.getOrDefault(mensagem, new ArrayList<>());
+            //List<String> mensagems = errosPorCampo.getOrDefault(mensagem, new ArrayList<>());
+            //mensagems.add(mensagem);
 
-            mensagems.add(mensagem);
+            errosPorCampo.computeIfAbsent(
+                compo,
+                chave -> new ArrayList<>()
+            ).add(mensagem);
 
-            errosPorCampo.put(compo, mensagems);
+            //errosPorCampo.put(compo, mensagems);
         }
 
         ErroResponse erroResponse = new ErroResponse(400, errosPorCampo);
 
+        return ResponseEntity.badRequest().body(erroResponse);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponse> tratarRecursoNãoLegivel(HttpMessageNotReadableException ex ) {
+
+        ErroResponse erroResponse = new ErroResponse(400,"informações do JSON enviado é inválido");
         return ResponseEntity.badRequest().body(erroResponse);
     }
 
