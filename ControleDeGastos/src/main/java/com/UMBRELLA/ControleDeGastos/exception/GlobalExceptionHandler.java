@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.UMBRELLA.ControleDeGastos.dtoException.ErroResponse;
+import com.UMBRELLA.ControleDeGastos.model.Categoria;
 
-import jakarta.servlet.http.HttpServletRequest;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 @RestControllerAdvice 
 public class GlobalExceptionHandler {
@@ -75,10 +76,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErroResponse> tratarRecursoNãoLegivel(HttpMessageNotReadableException ex ) {
+    public ResponseEntity<ErroResponse> tratarJsonInvalido(HttpMessageNotReadableException ex ) {
 
-        ErroResponse erroResponse = new ErroResponse(400,"informações do JSON enviado é inválido");
-        return ResponseEntity.badRequest().body(erroResponse);
+        Throwable causa = ex.getCause();
+
+        if (causa instanceof InvalidFormatException erro) {
+
+            if (erro.getTargetType() == Categoria.class) {
+                ErroResponse erroCategoria = new ErroResponse(400,"Categoria inválida.");
+                return ResponseEntity.badRequest().body(erroCategoria);
+            }
+        }
+
+        ErroResponse erroResponse = new ErroResponse(400,"As informações enviadas no JSON são inválidas.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponse);
     }
-
 }
