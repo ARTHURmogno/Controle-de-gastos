@@ -13,6 +13,10 @@ public class buscaDinamica {
         return (root, query, builder) -> {
             Predicate predicate = builder.conjunction();
 
+            /*if (dto.getValor() != null && dto.getValor().compareTo(dto.getValor()) <= 0) {
+                Predicate predicateValor = builder.equal((root.get("Valor")), dto.getValor);
+            }*/
+
 
             return predicate;
         };

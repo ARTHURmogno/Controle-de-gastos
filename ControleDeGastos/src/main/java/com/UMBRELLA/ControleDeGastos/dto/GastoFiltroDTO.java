@@ -20,7 +20,7 @@ public class GastoFiltroDTO {
     private BigDecimal valor;
     private LocalDate data;
     private Categoria categoria;
-
+    
     private LocalDate dataMinima;
 
     private LocalDate dataMaxima;
