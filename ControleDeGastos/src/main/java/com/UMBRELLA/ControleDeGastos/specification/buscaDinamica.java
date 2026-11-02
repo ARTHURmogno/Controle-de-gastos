@@ -27,7 +27,7 @@ public class buscaDinamica {
 
                 predicate = builder.and(predicate, predicateCategoria);
             }
-            
+
             if (dto.getValor() != null && dto.getValor().compareTo(BigDecimal.ZERO) <= 0) {
 
                 Predicate predicateValor = builder.equal(root.get("Valor"), dto.getValor());
@@ -40,6 +40,8 @@ public class buscaDinamica {
 
                 predicate = builder.and(predicate, predicateData);
             }
+
+
 
 
             return predicate;
