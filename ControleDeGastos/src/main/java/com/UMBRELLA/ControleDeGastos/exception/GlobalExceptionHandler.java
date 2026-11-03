@@ -68,4 +68,6 @@ public class GlobalExceptionHandler {
         ErroResponse erroResponse = new ErroResponse(400,"As informações enviadas no JSON são inválidas.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponse);
     }
+
+    @ExceptionHandler(BindException.class)
 }

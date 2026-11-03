@@ -2,16 +2,20 @@ package com.UMBRELLA.ControleDeGastos.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
 import com.UMBRELLA.ControleDeGastos.mapper.GastoMapper;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
+import com.UMBRELLA.ControleDeGastos.specification.buscaDinamica;
 
 @Service
 public class ModeloDeGastosService {
@@ -32,8 +36,10 @@ public class ModeloDeGastosService {
         return gastoMapper.toResponseDTO(novoGasto);
     }
 
-    public List<GastoResponseDTO> mostrarDados() {
-        List<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll();
+    public List<GastoResponseDTO> mostrarDados(GastoFiltroDTO filtro, Pageable pageable) {
+        Specification<ModeloDeGasto> specification = buscaDinamica.comfiltro(filtro);
+
+        Page<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll(specification, pageable);
 
         return gastos.stream().map(gastoMapper::toResponseDTO).toList();
     }

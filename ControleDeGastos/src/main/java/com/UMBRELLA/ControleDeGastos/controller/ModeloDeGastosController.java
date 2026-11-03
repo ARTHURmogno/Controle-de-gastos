@@ -2,7 +2,7 @@ package com.UMBRELLA.ControleDeGastos.controller;
 
 import java.util.List;
 
-import org.springframework.boot.data.autoconfigure.web.DataWebProperties.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -42,11 +42,11 @@ public class ModeloDeGastosController {
         @PageableDefault(
         page = 0,
         size = 10,
-        sort = "nome",
+        sort = "descricao",
         direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        return ResponseEntity.ok(modeloDeGastosService.mostrarDados());
+        return ResponseEntity.ok(modeloDeGastosService.mostrarDados(filtro, pageable));
     }
 
     @GetMapping("/{id}")
