@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.UMBRELLA.ControleDeGastos.dtoException.ErroResponse;
@@ -36,10 +38,17 @@ public class GlobalExceptionHandler {
 
         Map<String, List<String>> errosPorCampo = new HashMap<>();
 
-        for (FieldError erro : erros) {
+            for (FieldError erro : erros) {
 
             String compo = erro.getField();
             String mensagem = erro.getDefaultMessage();
+
+             if ("typeMismatch".equals(erro.getCode())) {
+                
+                String enumErro = "Categoria Inválido(Categoria deve ser escrito toda em Maiuscula. ou e inválida.";
+
+               mensagem = enumErro;
+            }
 
             errosPorCampo.computeIfAbsent(
                 compo,
@@ -69,5 +78,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponse);
     }
 
-    @ExceptionHandler(BindException.class)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErroResponse> tratarEnumInvalido(MethodArgumentTypeMismatchException ex) {
+        ErroResponse erro = new ErroResponse(400, "Categoria Inválido(Categoria deve ser escrito toda em Maiuscula.");
+
+        return ResponseEntity.badRequest().body(erro);
+    }
 }
