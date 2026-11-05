@@ -44,8 +44,7 @@ public class GlobalExceptionHandler {
             String mensagem = erro.getDefaultMessage();
 
              if ("typeMismatch".equals(erro.getCode())) {
-                
-                String enumErro = "Categoria Inválido(Categoria deve ser escrito toda em Maiuscula. ou e inválida.";
+                String enumErro = "Campo: " + compo + " inválido ou inexistente.";
 
                mensagem = enumErro;
             }
