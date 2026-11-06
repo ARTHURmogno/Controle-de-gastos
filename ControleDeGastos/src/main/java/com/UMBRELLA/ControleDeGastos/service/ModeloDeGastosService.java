@@ -36,7 +36,7 @@ public class ModeloDeGastosService {
         return gastoMapper.toResponseDTO(novoGasto);
     }
 
-    public List<GastoResponseDTO> mostrarDados(GastoFiltroDTO filtro, Pageable pageable) {
+    public Page<GastoResponseDTO> mostrarDados(GastoFiltroDTO filtro, Pageable pageable) {
         Specification<ModeloDeGasto> specification = buscaDinamica.comfiltro(filtro);
 
         Page<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll(specification, pageable);

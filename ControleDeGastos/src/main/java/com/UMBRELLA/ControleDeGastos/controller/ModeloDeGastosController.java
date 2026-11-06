@@ -2,6 +2,7 @@ package com.UMBRELLA.ControleDeGastos.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -37,10 +38,9 @@ public class ModeloDeGastosController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GastoResponseDTO>> buscarDados(
+    public ResponseEntity<Page<GastoResponseDTO>> buscarDados(
         @ModelAttribute @Validated GastoFiltroDTO filtro, 
         @PageableDefault(
-        page = 0,
         size = 10,
         sort = "descricao",
         direction = Sort.Direction.DESC) Pageable pageable
