@@ -1,6 +1,6 @@
 package com.UMBRELLA.ControleDeGastos.controller;
 
-import java.util.List;
+import java.net.URI;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
@@ -42,7 +43,7 @@ public class ModeloDeGastosController {
         @ModelAttribute @Validated GastoFiltroDTO filtro, 
         @PageableDefault(
         size = 10,
-        sort = "descricao",
+        sort = "data",
         direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
@@ -57,8 +58,14 @@ public class ModeloDeGastosController {
 
     @PostMapping 
     public ResponseEntity<GastoResponseDTO> salvarGasto(@RequestBody @Valid GastoRequestDTO gastoDTO) {
+        GastoResponseDTO novoGasto = modeloDeGastosService.salvarDados(gastoDTO);
 
-        return ResponseEntity.ok(modeloDeGastosService.salvarDados(gastoDTO));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        .path("/{id}")
+        .buildAndExpand(novoGasto.getId())
+        .toUri();
+
+        return ResponseEntity.created(location).body(novoGasto);
     }
 
     @PatchMapping("/{id}")
@@ -68,9 +75,10 @@ public class ModeloDeGastosController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deletarGastoPorId(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarGastoPorId(@PathVariable Long id) {
+        modeloDeGastosService.deletarPorId(id);
 
-        return ResponseEntity.ok(modeloDeGastosService.deletarPorId(id));
+        return ResponseEntity.noContent().build();
     }
 
     }

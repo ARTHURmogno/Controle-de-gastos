@@ -34,7 +34,7 @@ public class ModeloDeGasto {
     private Long id;
 
     @NotBlank(message = "Descrição é obrigatório")
-    @Size(min = 2, max = 500)
+    @Size(min = 2, max = 250)
     private String descricao;
 
     @Positive(message = "Valor deve-se positivo")

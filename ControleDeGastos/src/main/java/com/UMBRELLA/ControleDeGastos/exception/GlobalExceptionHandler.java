@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
 
                 mensagem = enumErro;
                 } else {
-                    
+
                     mensagem = "Campo: " + compo + " inválido ou inexistente.";
                 }
             }
@@ -84,8 +84,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErroResponse> tratarEnumInvalido(MethodArgumentTypeMismatchException ex) {
-        ErroResponse erro = new ErroResponse(400, "Categoria Inválido(Categoria deve ser escrito toda em Maiuscula.");
+    public ResponseEntity<ErroResponse> tratarTipoInvalido(MethodArgumentTypeMismatchException ex) {
+        ErroResponse erro = new ErroResponse(400, "Parâmetro '" + ex.getName() + "' inválido: '"
+         + ex.getValue() + "' não é um valor válido.");
 
         return ResponseEntity.badRequest().body(erro);
     }

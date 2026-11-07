@@ -41,7 +41,8 @@ public class ModeloDeGastosService {
 
         Page<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll(specification, pageable);
 
-        return gastos.stream().map(gastoMapper::toResponseDTO).toList();
+        return gastos.map(gastoMapper::toResponseDTO);
+        //return gastos.stream().map(gastoMapper::toResponseDTO).toList();
     }
 
     private ModeloDeGasto buscarPorId(Long id) {
@@ -65,12 +66,11 @@ public class ModeloDeGastosService {
         return gastoMapper.toResponseDTO(atualizado);
     }
 
-    public Long deletarPorId(Long id) {
+    public void deletarPorId(Long id) {
         buscarPorId(id);
 
         modeloDeGastosRepository.deleteById(id);
 
-        return id;
     }
 
 }
