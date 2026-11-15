@@ -1,7 +1,8 @@
 package com.UMBRELLA.ControleDeGastos.service;
 
-import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,7 +29,8 @@ public class ModeloDeGastosService {
         this.gastoMapper = gastoMapper;
     }
 
-    public GastoResponseDTO salvarDados(GastoRequestDTO gastoDTO) {
+    @Transactional
+    public GastoResponseDTO salvarGasto(GastoRequestDTO gastoDTO) {
         ModeloDeGasto gasto = gastoMapper.toEntity(gastoDTO);
 
         ModeloDeGasto novoGasto = modeloDeGastosRepository.save(gasto);
@@ -36,26 +38,29 @@ public class ModeloDeGastosService {
         return gastoMapper.toResponseDTO(novoGasto);
     }
 
-    public Page<GastoResponseDTO> mostrarDados(GastoFiltroDTO filtro, Pageable pageable) {
+    @Transactional(readOnly = true) 
+    public Page<GastoResponseDTO> mostrarGastos(GastoFiltroDTO filtro, Pageable pageable) {
         Specification<ModeloDeGasto> specification = buscaDinamica.comfiltro(filtro);
 
         Page<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll(specification, pageable);
 
         return gastos.map(gastoMapper::toResponseDTO);
-        //return gastos.stream().map(gastoMapper::toResponseDTO).toList();
     }
 
+    @Transactional
     private ModeloDeGasto buscarPorId(Long id) {
         return modeloDeGastosRepository.findById(id).orElseThrow
         (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "nada encontrado."));
     }
 
+    @Transactional(readOnly = true)
     public GastoResponseDTO buscarDadosPorId(Long id) {
         ModeloDeGasto novoDado = buscarPorId(id);
 
         return gastoMapper.toResponseDTO(novoDado);
     }
 
+    @Transactional 
     public GastoResponseDTO atualizarPorId(GastoUpdateDTO dto, Long id) {
         ModeloDeGasto novoGasto = buscarPorId(id);
 
@@ -66,6 +71,7 @@ public class ModeloDeGastosService {
         return gastoMapper.toResponseDTO(atualizado);
     }
 
+    @Transactional
     public void deletarPorId(Long id) {
         buscarPorId(id);
 

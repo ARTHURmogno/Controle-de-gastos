@@ -47,7 +47,7 @@ public class ModeloDeGastosController {
         direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        return ResponseEntity.ok(modeloDeGastosService.mostrarDados(filtro, pageable));
+        return ResponseEntity.ok(modeloDeGastosService.mostrarGastos(filtro, pageable));
     }
 
     @GetMapping("/{id}")
@@ -58,7 +58,7 @@ public class ModeloDeGastosController {
 
     @PostMapping 
     public ResponseEntity<GastoResponseDTO> salvarGasto(@RequestBody @Valid GastoRequestDTO gastoDTO) {
-        GastoResponseDTO novoGasto = modeloDeGastosService.salvarDados(gastoDTO);
+        GastoResponseDTO novoGasto = modeloDeGastosService.salvarGasto(gastoDTO);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
