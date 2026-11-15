@@ -9,10 +9,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.UMBRELLA.ControleDeGastos.exception.GlobalExceptionHandler;
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
+import com.UMBRELLA.ControleDeGastos.exception.GastoNaoEncontradoException;
 import com.UMBRELLA.ControleDeGastos.mapper.GastoMapper;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
@@ -50,7 +52,7 @@ public class ModeloDeGastosService {
     @Transactional
     private ModeloDeGasto buscarPorId(Long id) {
         return modeloDeGastosRepository.findById(id).orElseThrow
-        (() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "nada encontrado."));
+        (() -> new GastoNaoEncontradoException(HttpStatus.NOT_FOUND, "Gasto com id: '" + id + "' nada encontrado."));
     }
 
     @Transactional(readOnly = true)

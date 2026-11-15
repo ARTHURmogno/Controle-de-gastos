@@ -30,7 +30,14 @@ public class GlobalExceptionHandler {
 
         ErroResponse erroResponse = new ErroResponse(404, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroResponse);
-        }
+    }
+
+    @ExceptionHandler(GastoNaoEncontradoException.class)
+    public ResponseEntity<ErroResponse> tratarErroDeStatus(GastoNaoEncontradoException ex) {
+
+        ErroResponse erroResponse = new ErroResponse(404, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroResponse);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> tratarMultiplosErros(MethodArgumentNotValidException ex) {
