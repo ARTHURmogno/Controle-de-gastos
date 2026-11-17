@@ -39,7 +39,7 @@ public class ModeloDeGastosController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<GastoResponseDTO>> buscarDados(
+    public ResponseEntity<Page<GastoResponseDTO>> mostrarGastos(
         @ModelAttribute @Validated GastoFiltroDTO filtro, 
         @PageableDefault(
         size = 10,
@@ -47,7 +47,7 @@ public class ModeloDeGastosController {
         direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        return ResponseEntity.ok(modeloDeGastosService.mostrarGastos(filtro, pageable));
+        return ResponseEntity.ok(modeloDeGastosService.buscarGastos(filtro, pageable));
     }
 
     @GetMapping("/{id}")

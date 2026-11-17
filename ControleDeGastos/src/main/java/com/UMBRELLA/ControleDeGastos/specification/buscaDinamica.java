@@ -11,11 +11,11 @@ import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 
 import jakarta.persistence.criteria.Predicate;
 
-public class buscaDinamica {
+public class BuscaDinamica {
 
     //private Categoria categoria;
 
-    public static Specification<ModeloDeGasto> comfiltro(GastoFiltroDTO dto) {
+    public static Specification<ModeloDeGasto> comFiltro(GastoFiltroDTO dto) {
         return (root, query, builder) -> {
             Predicate predicate = builder.conjunction();
 

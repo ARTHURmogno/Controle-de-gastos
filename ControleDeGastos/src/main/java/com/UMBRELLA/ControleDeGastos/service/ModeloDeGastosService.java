@@ -7,9 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.UMBRELLA.ControleDeGastos.exception.GlobalExceptionHandler;
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
@@ -18,7 +16,7 @@ import com.UMBRELLA.ControleDeGastos.exception.GastoNaoEncontradoException;
 import com.UMBRELLA.ControleDeGastos.mapper.GastoMapper;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
-import com.UMBRELLA.ControleDeGastos.specification.buscaDinamica;
+import com.UMBRELLA.ControleDeGastos.specification.BuscaDinamica;
 
 @Service
 public class ModeloDeGastosService {
@@ -41,8 +39,8 @@ public class ModeloDeGastosService {
     }
 
     @Transactional(readOnly = true) 
-    public Page<GastoResponseDTO> mostrarGastos(GastoFiltroDTO filtro, Pageable pageable) {
-        Specification<ModeloDeGasto> specification = buscaDinamica.comfiltro(filtro);
+    public Page<GastoResponseDTO> buscarGastos(GastoFiltroDTO filtro, Pageable pageable) {
+        Specification<ModeloDeGasto> specification = BuscaDinamica.comFiltro(filtro);
 
         Page<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll(specification, pageable);
 
@@ -52,7 +50,7 @@ public class ModeloDeGastosService {
     @Transactional
     private ModeloDeGasto buscarPorId(Long id) {
         return modeloDeGastosRepository.findById(id).orElseThrow
-        (() -> new GastoNaoEncontradoException(HttpStatus.NOT_FOUND, "Gasto com id: '" + id + "' nada encontrado."));
+        (() -> new GastoNaoEncontradoException(HttpStatus.NOT_FOUND, "Gasto com id: '" + id + "' não encontrado."));
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +73,10 @@ public class ModeloDeGastosService {
 
     @Transactional
     public void deletarPorId(Long id) {
-        buscarPorId(id);
+
+        if (modeloDeGastosRepository.existsById(id)) {
+        throw new GastoNaoEncontradoException(HttpStatus.NOT_FOUND, "Gasto com id: '" + id + "' não encontrado.");
+        }
 
         modeloDeGastosRepository.deleteById(id);
 
