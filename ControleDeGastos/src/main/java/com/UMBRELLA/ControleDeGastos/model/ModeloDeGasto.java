@@ -3,7 +3,7 @@ package com.UMBRELLA.ControleDeGastos.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,6 +34,7 @@ public class ModeloDeGasto {
     private Long id;
 
     @NotBlank(message = "Descrição é obrigatório")
+    @Column(name = "descricao", length = 250)
     @Size(min = 2, max = 250)
     private String descricao;
 

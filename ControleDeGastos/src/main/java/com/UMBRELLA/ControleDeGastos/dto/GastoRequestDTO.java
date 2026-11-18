@@ -24,7 +24,7 @@ import lombok.Setter;
 public class GastoRequestDTO {
 
     @NotBlank(message = "Descrição é obrigatório")
-    @Size(message = "Tamanho mínimo do texto 2 carecteres é tamanho máximo 500 caracteres." ,min = 2, max = 250)
+    @Size(message = "Tamanho mínimo do texto 2 carecteres é tamanho máximo 250 caracteres." ,min = 2, max = 250)
     private String descricao;
 
     @Positive(message = "Valor deve-se positivo")
@@ -32,7 +32,7 @@ public class GastoRequestDTO {
     private BigDecimal valor;
 
     @NotNull(message = "A data é obrigatório")
-    @PastOrPresent(message = "Data é abrigatória")
+    @PastOrPresent(message = "Data não pode ser futura.")
     private LocalDate data;
 
     @Enumerated(EnumType.STRING)

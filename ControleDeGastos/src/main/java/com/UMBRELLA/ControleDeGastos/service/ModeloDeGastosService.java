@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
@@ -47,10 +46,9 @@ public class ModeloDeGastosService {
         return gastos.map(gastoMapper::toResponseDTO);
     }
 
-    @Transactional
     private ModeloDeGasto buscarPorId(Long id) {
         return modeloDeGastosRepository.findById(id).orElseThrow
-        (() -> new GastoNaoEncontradoException(HttpStatus.NOT_FOUND, "Gasto com id: '" + id + "' não encontrado."));
+        (() -> new GastoNaoEncontradoException("Gasto com id: '" + id + "' não encontrado."));
     }
 
     @Transactional(readOnly = true)
@@ -62,11 +60,11 @@ public class ModeloDeGastosService {
 
     @Transactional 
     public GastoResponseDTO atualizarPorId(GastoUpdateDTO dto, Long id) {
-        ModeloDeGasto novoGasto = buscarPorId(id);
+        ModeloDeGasto gastosExistente = buscarPorId(id);
 
-        gastoMapper.atualizarEntidade(dto, novoGasto);
+        gastoMapper.atualizarEntidade(dto, gastosExistente);
 
-        ModeloDeGasto atualizado = modeloDeGastosRepository.save(novoGasto);
+        ModeloDeGasto atualizado = modeloDeGastosRepository.save(gastosExistente);
 
         return gastoMapper.toResponseDTO(atualizado);
     }
@@ -74,8 +72,8 @@ public class ModeloDeGastosService {
     @Transactional
     public void deletarPorId(Long id) {
 
-        if (modeloDeGastosRepository.existsById(id)) {
-        throw new GastoNaoEncontradoException(HttpStatus.NOT_FOUND, "Gasto com id: '" + id + "' não encontrado.");
+        if (!modeloDeGastosRepository.existsById(id)) {
+        throw new GastoNaoEncontradoException("Gasto com id: '" + id + "' não encontrado.");
         }
 
         modeloDeGastosRepository.deleteById(id);
