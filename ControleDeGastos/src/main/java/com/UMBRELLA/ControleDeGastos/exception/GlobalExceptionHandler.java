@@ -32,6 +32,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroResponse);
     }
 
+    @ExceptionHandler(ValidacaoQueryException.class)
+    public ResponseEntity<ErroResponse> tratarErroDeValidacaoDeFiltro(ValidacaoQueryException ex) {
+
+        ErroResponse erro = new ErroResponse(400, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
     @ExceptionHandler(GastoNaoEncontradoException.class)
     public ResponseEntity<ErroResponse> tratarErroDeStatus(GastoNaoEncontradoException ex) {
 

@@ -12,6 +12,7 @@ import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
 import com.UMBRELLA.ControleDeGastos.exception.GastoNaoEncontradoException;
+import com.UMBRELLA.ControleDeGastos.exception.ValidacaoQueryException;
 import com.UMBRELLA.ControleDeGastos.mapper.GastoMapper;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
@@ -37,8 +38,18 @@ public class ModeloDeGastosService {
         return gastoMapper.toResponseDTO(novoGasto);
     }
 
+    private void validarFiltro(GastoFiltroDTO filtro) {
+         if (filtro.getDataMaxima() != null && filtro.getDataMinima() != null && filtro.getDataMinima().isAfter(filtro.getDataMaxima())) {
+            throw new ValidacaoQueryException("Data Máxima deve ser Maior ou igual a Data Mínima.");
+        }
+        if (filtro.getValorMaximo() != null && filtro.getValorMinimo() != null && filtro.getValorMinimo().compareTo(filtro.getValorMaximo()) >0 ) {
+            throw new ValidacaoQueryException("Valor Máximo deve ser maior ou igual a Valor Mínimo.");
+        }
+    }
+
     @Transactional(readOnly = true) 
     public Page<GastoResponseDTO> buscarGastos(GastoFiltroDTO filtro, Pageable pageable) {
+        validarFiltro(filtro);
         Specification<ModeloDeGasto> specification = BuscaDinamica.comFiltro(filtro);
 
         Page<ModeloDeGasto> gastos = modeloDeGastosRepository.findAll(specification, pageable);

@@ -1,19 +1,13 @@
 package com.UMBRELLA.ControleDeGastos.specification;
 
-import java.math.BigDecimal;
-
 import org.springframework.data.jpa.domain.Specification;
 
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 
-//import com.UMBRELLA.ControleDeGastos.model.Categoria;
-
 import jakarta.persistence.criteria.Predicate;
 
 public class BuscaDinamica {
-
-    //private Categoria categoria;
 
     public static Specification<ModeloDeGasto> comFiltro(GastoFiltroDTO dto) {
         return (root, query, builder) -> {
@@ -25,15 +19,21 @@ public class BuscaDinamica {
                 predicate = builder.and(predicate, predicateCategoria);
             }
 
-            if (dto.getValor() != null && dto.getValor().compareTo(BigDecimal.ZERO) <= 0) {
+            if (dto.getValorMaximo() != null) {
 
-                Predicate predicateValor = builder.equal(root.get("valor"), dto.getValor());
+                Predicate predicateValorMaximo = builder.lessThanOrEqualTo(root.get("valor"), dto.getValorMaximo());
 
-                predicate = builder.and(predicate, predicateValor);
+                predicate = builder.and(predicate, predicateValorMaximo);
+            }
+
+            if (dto.getValorMinimo() != null) {
+
+                Predicate predicateValorMinimo = builder.greaterThanOrEqualTo(root.get("valor"), dto.getValorMinimo());
+                
+                predicate = builder.and(predicate, predicateValorMinimo);
             }
 
             if (dto.getDataMinima() != null) {
-                System.out.println(dto.getDataMinima());
                 Predicate predicateDataMinima = builder.greaterThanOrEqualTo(root.get("data"), dto.getDataMinima());
 
                 predicate = builder.and(predicate, predicateDataMinima);
