@@ -6,7 +6,6 @@ import java.time.LocalDate;
  
 import com.UMBRELLA.ControleDeGastos.model.Categoria;
 
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor 
 public class GastoFiltroDTO {
 
-    
+
     @Positive(message = "Valor Máximo deve ser Positivo.")
     private BigDecimal valorMaximo;
     @Positive(message = "Valor Mínimo deve ser Positivo.")
