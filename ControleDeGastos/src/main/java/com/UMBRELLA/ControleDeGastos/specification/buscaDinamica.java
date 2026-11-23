@@ -5,15 +5,21 @@ import org.springframework.data.jpa.domain.Specification;
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 public class BuscaDinamica {
 
-    public static Specification<ModeloDeGasto> comFiltro(GastoFiltroDTO dto) {
-        return (root, query, builder) -> {
-            Predicate predicate = builder.conjunction();
+     public static Specification<ModeloDeGasto> comFiltro(GastoFiltroDTO dto) {
+       return (root, query, builder) -> montarPredicate(root, builder, dto);
+    }
 
-            if (dto.getCategoria() != null) {
+    public static Predicate montarPredicate(Root<ModeloDeGasto> root, CriteriaBuilder builder, GastoFiltroDTO dto) {
+
+           Predicate predicate = builder.conjunction();
+
+           if (dto.getCategoria() != null) {
                 Predicate predicateCategoria = builder.equal(root.get("categoria"), dto.getCategoria());
 
                 predicate = builder.and(predicate, predicateCategoria);
@@ -45,8 +51,8 @@ public class BuscaDinamica {
 
                 predicate = builder.and(predicate, predicateDataMaxima);
             }
-
+            
             return predicate;
-        };
     }
+        
 }
