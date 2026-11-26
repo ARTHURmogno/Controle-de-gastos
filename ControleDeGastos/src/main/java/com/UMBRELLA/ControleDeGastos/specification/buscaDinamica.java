@@ -3,12 +3,15 @@ package com.UMBRELLA.ControleDeGastos.specification;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
+import com.UMBRELLA.ControleDeGastos.dto.ResumoMensalDTO;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
+@PersistenceContext
 public class BuscaDinamica {
 
      public static Specification<ModeloDeGasto> comFiltro(GastoFiltroDTO dto) {

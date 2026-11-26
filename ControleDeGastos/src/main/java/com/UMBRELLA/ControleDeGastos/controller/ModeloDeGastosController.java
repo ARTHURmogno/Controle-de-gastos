@@ -1,6 +1,7 @@
 package com.UMBRELLA.ControleDeGastos.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
+import com.UMBRELLA.ControleDeGastos.dto.ResumoMensalDTO;
 import com.UMBRELLA.ControleDeGastos.service.ModeloDeGastosService;
 
 
@@ -48,6 +50,12 @@ public class ModeloDeGastosController {
     ) {
 
         return ResponseEntity.ok(modeloDeGastosService.buscarGastos(filtro, pageable));
+    }
+
+    @GetMapping("/resumo-Mensal")
+    public ResponseEntity<List<ResumoMensalDTO>> resumoDosGastos(GastoFiltroDTO filtro) {
+
+        return ResponseEntity.ok(modeloDeGastosService.buscarResumoMensal(filtro));
     }
 
     @GetMapping("/{id}")

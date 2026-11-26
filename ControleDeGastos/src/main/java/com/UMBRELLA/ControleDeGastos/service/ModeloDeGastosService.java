@@ -3,6 +3,15 @@ package com.UMBRELLA.ControleDeGastos.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,11 +20,13 @@ import com.UMBRELLA.ControleDeGastos.dto.GastoFiltroDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoRequestDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoResponseDTO;
 import com.UMBRELLA.ControleDeGastos.dto.GastoUpdateDTO;
+import com.UMBRELLA.ControleDeGastos.dto.ResumoMensalDTO;
 import com.UMBRELLA.ControleDeGastos.exception.GastoNaoEncontradoException;
 import com.UMBRELLA.ControleDeGastos.exception.ValidacaoQueryException;
 import com.UMBRELLA.ControleDeGastos.mapper.GastoMapper;
 import com.UMBRELLA.ControleDeGastos.model.ModeloDeGasto;
 import com.UMBRELLA.ControleDeGastos.repository.ModeloDeGastosRepository;
+import com.UMBRELLA.ControleDeGastos.repository.ResumoDeGastosRepository;
 import com.UMBRELLA.ControleDeGastos.specification.BuscaDinamica;
 
 @Service
@@ -23,10 +34,12 @@ public class ModeloDeGastosService {
 
     private final ModeloDeGastosRepository modeloDeGastosRepository;
     private final GastoMapper gastoMapper;
+    private final ResumoDeGastosRepository resumoDeGastosRepository;
 
-    public ModeloDeGastosService(ModeloDeGastosRepository modeloDeGastosRepository, GastoMapper gastoMapper) {
+    public ModeloDeGastosService(ResumoDeGastosRepository resumoDeGastosRepository, ModeloDeGastosRepository modeloDeGastosRepository, GastoMapper gastoMapper) {
         this.modeloDeGastosRepository = modeloDeGastosRepository;
         this.gastoMapper = gastoMapper;
+        this.resumoDeGastosRepository = resumoDeGastosRepository;
     }
 
     @Transactional
@@ -45,6 +58,35 @@ public class ModeloDeGastosService {
         if (filtro.getValorMaximo() != null && filtro.getValorMinimo() != null && filtro.getValorMinimo().compareTo(filtro.getValorMaximo()) >0 ) {
             throw new ValidacaoQueryException("Valor Máximo deve ser maior ou igual a Valor Mínimo.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<ResumoMensalDTO> buscarResumoMensal(GastoFiltroDTO filtro) {
+        validarFiltro(filtro);
+
+        ZoneId fusoManaus = ZoneId.of("America/Manaus");
+
+        YearMonth anoMesAtual = YearMonth.now(fusoManaus);
+
+        GastoFiltroDTO filtroFinal = filtro;
+
+        if (filtro.getDataMinima() == null && filtro.getDataMaxima() == null) {
+
+            LocalDate primeiroDia = anoMesAtual.minusMonths(11).atDay(1);
+            LocalDate ultimoDia = anoMesAtual.atEndOfMonth();
+
+            filtroFinal = new GastoFiltroDTO();
+
+            filtroFinal.setCategoria(filtro.getCategoria());
+            filtroFinal.setValorMinimo(filtro.getValorMinimo());
+            filtroFinal.setValorMaximo(filtro.getValorMaximo());
+
+            filtroFinal.setDataMinima(primeiroDia);
+            filtroFinal.setDataMaxima(ultimoDia);
+        }
+
+
+        return resumoDeGastosRepository.resumoMensal(filtroFinal);
     }
 
     @Transactional(readOnly = true) 
