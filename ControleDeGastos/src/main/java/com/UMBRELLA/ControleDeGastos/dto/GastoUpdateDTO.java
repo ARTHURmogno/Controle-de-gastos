@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import com.UMBRELLA.ControleDeGastos.model.Categoria;
 
-import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GastoUpdateDTO {
 
-    @Size(min = 2, max = 250)
+    @Size(message = "Tamanho mínimo do texto 2 carecteres é tamanho máximo 250 caracteres.", min = 2, max = 250)
     private String descricao;
 
     @Positive(message = "Valor deve ser positivo.")
